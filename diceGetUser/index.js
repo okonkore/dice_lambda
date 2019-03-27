@@ -11,12 +11,14 @@ exports.handler = async (event) => {
     let u = event.params.querystring.uuid;
 
     let current = 23;
-    let pos = utils.getNextPos(current, 10);
-    console.log(utils.getNextPos(current, 10));
 
     let data = await dao.getDiceUser(u);
     let body = data["Item"];
-    body["pos"] = pos;
+    let pos = null;
+    if (body.dice > 0) {
+        pos = utils.getNextPos(body.pos, body.dice);
+    }
+    body["next"] = pos;
     const response = {
         statusCode: 200,
         body: JSON.stringify(body),
